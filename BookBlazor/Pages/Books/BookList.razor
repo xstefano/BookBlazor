@@ -1,0 +1,67 @@
+﻿@page "/books"
+
+@using BookBlazor.Models;
+@using BookBlazor.Repository;
+
+@inject IBookRepository Repository;
+
+<div class="card">
+	<div class="card-header">
+		<div class="row">
+			<div class="col-sm-9 text-black">
+				<h2>List of books</h2>
+			</div>
+			<div class="col-sm-3">
+				<a href="books/add" class="btn btn-primary">Add new book</a>
+			</div>
+		</div>
+	</div>
+	<div class="card-body bg-black bg-opacity-10">
+		<table class="table table-striped border">
+			<tr class="table-secondary">
+				<th>Id</th>
+				<th>Title</th>
+				<th>Description</th>
+				<th>Author</th>
+				<th>Pages</th>
+				<th>Price</th>
+				<th>ReleaseDate</th>
+				<th>Shares</th>
+			</tr>
+			@foreach (var item in bookList)
+			{
+				<tr>
+					<td>@item.Id</td>
+					<td>@item.Title</td>
+					<td>@item.Description</td>
+					<td>@item.Author</td>
+					<td>@item.Pages</td>
+					<td>@item.Price</td>
+					<td>@item.ReleaseDate.ToString("dd/MM/yyyy")</td>
+
+					<td>
+						<a href="books/update/@item.Id" class="btn btn-success btn-sm">Update</a>
+						<button @onclick="@( () => DeleteBook(item.Id))" class="btn btn-danger btn-sm">Delete</button>
+					</td>
+				</tr>
+			}
+		</table>
+	</div>
+</div>
+
+
+
+@code {
+	private List<Book> bookList = new List<Book>();
+
+	protected override async Task OnInitializedAsync()
+	{
+		bookList = await Repository.GetBooks();
+	}
+
+	private async Task DeleteBook(int id)
+	{
+		await Repository.DeleteBook(id);
+		bookList = await Repository.GetBooks();
+	}
+}

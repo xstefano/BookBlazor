@@ -1,0 +1,119 @@
+﻿@page "/books/add"
+
+@using Microsoft.AspNetCore.Components.Forms;
+@using BookBlazor.Models;
+@using BookBlazor.Repository;
+
+@inject IBookRepository Repository;
+@inject NavigationManager NavigationManager;
+
+<div class="card">
+	<div class="card-header">
+		<div class="row">
+			<div class="col-sm-12 text-black">
+				<h2>Add a new book</h2>
+			</div>
+		</div>
+	</div>
+	<div class="card-body">
+		<EditForm Model="bookModel" OnValidSubmit="@( () => HandlerAddBook())">
+			<DataAnnotationsValidator/>
+			<div class="container" style="padding:30px">
+
+				<div class="form-group">
+					<div class="row">
+						<div class="col-sm-2">
+							<label>Title</label>
+						</div>
+						<div class="col-sm-6">
+							<InputText @bind-Value="bookModel.Title" class="form-control"></InputText>
+							<ValidationMessage For=" () => bookModel.Title"></ValidationMessage>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="row">
+						<div class="col-sm-2">
+							<label>Description</label>
+						</div>
+						<div class="col-sm-6">
+							<InputText @bind-Value="bookModel.Description" class="form-control"></InputText>
+							<ValidationMessage For=" () => bookModel.Description"></ValidationMessage>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="row">
+						<div class="col-sm-2">
+							<label>Author</label>
+						</div>
+						<div class="col-sm-6">
+							<InputText @bind-Value="bookModel.Author" class="form-control"></InputText>
+							<ValidationMessage For=" () => bookModel.Author"></ValidationMessage>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="row">
+						<div class="col-sm-2">
+							<label>Pages</label>
+						</div>
+						<div class="col-sm-6">
+							<InputNumber @bind-Value="bookModel.Pages" class="form-control"></InputNumber>
+							<ValidationMessage For=" () => bookModel.Pages"></ValidationMessage>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="row">
+						<div class="col-sm-2">
+							<label>Price</label>
+						</div>
+						<div class="col-sm-6">
+							<InputNumber @bind-Value="bookModel.Price" class="form-control"></InputNumber>
+							<ValidationMessage For=" () => bookModel.Price"></ValidationMessage>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="row">
+						<div class="col-sm-2">
+							<label>CreatingDate</label>
+						</div>
+						<div class="col-sm-6">
+							<InputDate @bind-Value="bookModel.ReleaseDate" class="form-control"></InputDate>
+							<ValidationMessage For=" () => bookModel.ReleaseDate"></ValidationMessage>
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group mt-4">
+					<div class="row">
+						<div class="col-sm-2">
+							<button type="submit" class="btn btn-success">Save book</button>
+						</div>
+						<div class="col-sm-6">
+							<button class="btn btn-danger" @onclick="@( () => NavigationManager.NavigateTo("/books"))">Back to list</button>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</EditForm>
+	</div>
+</div>
+
+@code {
+	private Book bookModel = new Book();
+
+	private async Task HandlerAddBook()
+	{
+		await Repository.AddBook(bookModel);
+		NavigationManager.NavigateTo("/books");
+	}
+}
